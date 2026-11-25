@@ -95,14 +95,43 @@ async function runScenario(name) {
     T6: { room: 'Room 101', now: '09:00', start: '08:00', end: '09:00', check: true },
     T7: { room: 'Room 101', now: '09:00', start: '10:00', end: '11:00', check: true },
     T8: { room: 'Room 101', now: '09:00', start: '13:00', end: '14:00', check: true },
+    X1: { room: 'Room 101', now: '09:00', start: '<img src=x onerror="window.__xss=1">', end: '14:00', check: true },
+    X2: { room: 'Room 101', now: '09:00', start: "09:30'; DROP TABLE bookings--", end: '10:30', check: true },
+    X3: { room: 'Room 101', now: '09:00', start: '{{appsmith.store.x}}', end: '14:00', check: true },
+    S1: {},
   };
   const spec = T[name];
   if (!spec) return { scenario: name, error: 'unknown scenario' };
   const pageBefore = existingBookingTitles();
   const ran = await apply(spec);
   const v = verdict();
+  let probe = null;
+  if (name === 'S1') {
+    return {
+      scenario: name,
+      storage: {
+        localStorage_keys: Object.keys(window.localStorage),
+        sessionStorage_keys: Object.keys(window.sessionStorage),
+        cookie_length: document.cookie.length,
+        indexedDB_present: typeof window.indexedDB !== 'undefined',
+      },
+      verdict: null, code: null, message: null, reasons: [],
+      bookings_before: existingBookingTitles(), bookings_after: existingBookingTitles(),
+      layout: { scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth, horizontalOverflow: false },
+    };
+  }
+  if (/^X/.test(name)) {
+    const el = timeInputByLabel('Start time');
+    probe = {
+      start_input_value_after_payload: el ? el.value : null,
+      executable_nodes_injected: document.querySelectorAll('img[onerror],iframe,object,embed').length,
+      xss_flag: window.__xss === 1,
+      payload_echoed_in_dom: /DROP TABLE|onerror=|appsmith\.store/.test(document.body.innerHTML),
+    };
+  }
   return {
     scenario: name,
+    probe,
     steps: ran.steps,
     clock: currentClock(),
     verdict: v.verdict,

@@ -1,0 +1,26 @@
+{
+  "scenario": "S1",
+  "storage": {
+    "localStorage_keys": [],
+    "sessionStorage_keys": [],
+    "cookie_length": 0,
+    "indexedDB_present": true
+  },
+  "verdict": null,
+  "code": null,
+  "message": null,
+  "reasons": [],
+  "bookings_before": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "bookings_after": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "layout": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false
+  }
+}
