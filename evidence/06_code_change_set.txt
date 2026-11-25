@@ -1,0 +1,127 @@
+diff -ru baseline_code/src/App.tsx code_based/src/App.tsx
+--- baseline_code/src/App.tsx	2026-11-25 14:29:28.837435200 +0500
++++ code_based/src/App.tsx	2026-11-25 14:25:04.697612900 +0500
+@@ -1,6 +1,9 @@
+ import { useMemo, useState } from 'react';
+ import { rooms, sampleBookings } from '@/lib/data';
+ import { checkAvailability, formatTime, isValidInterval, parseTimeToMinutes } from '@/lib/availability';
++import { classify } from '@/lib/validation';
++import { REASON_TEXT } from '@/lib/reason_codes';
++import type { Decision } from '@/lib/validation';
+ import type { CheckResult } from '@/lib/types';
+ import { MINUTES_PER_DAY } from '@/lib/types';
+ import RoomCard from '@/components/RoomCard';
+@@ -21,6 +24,7 @@
+   const [currentTimeOverride, setCurrentTimeOverride] = useState('09:00');
+   const [useOverride, setUseOverride] = useState(false);
+   const [result, setResult] = useState<CheckResult | null>(null);
++  const [decision, setDecision] = useState<Decision | null>(null);
+   const [validated, setValidated] = useState(false);
+ 
+   const selectedRoom = rooms.find((r) => r.id === selectedRoomId);
+@@ -45,22 +49,30 @@
+   // and checkAvailability, so the UI guard and the booking rule cannot disagree.
+   const handleCheck = () => {
+     setValidated(true);
++    // Practice #10, mitigation M2 (risk R-02). Both room rules below are guarded on `room` being
++    // defined, which is correct for a real room, but a call with room === undefined therefore skipped
++    // AC3 and AC4 entirely and returned available: true with zero reasons. A missing room is now itself
++    // a reason to refuse the check. The two room guards are deliberately left unchanged.
+     // Practice #10, mitigation M1 (risk R-01). With Override switched on and the time field emptied,
+     // line 32 fell back to 0, so the checker believed the current time was 00:00 and the AC1 past-time
+-    // rule stopped firing. The check now refuses that state instead of inventing a clock.
++    // rule stopped firing. The check refuses that state instead of inventing a clock.
+     if (useOverride && parseTimeToMinutes(currentTimeOverride) === null) {
+       setResult({ available: false, reasons: ['Please enter a valid override time in HH:MM format.'] });
++      setDecision({ available: false, code: 'E_BAD_FORMAT', message: 'Please enter a valid override time in HH:MM format.' });
+       return;
+     }
+     if (!rawCandidate) {
+-      setResult({ available: false, reasons: ['Please enter valid times in HH:MM format.'] });
++      setResult({ available: false, reasons: [REASON_TEXT.E_BAD_FORMAT] });
++      setDecision({ available: false, code: 'E_BAD_FORMAT', message: REASON_TEXT.E_BAD_FORMAT });
+       return;
+     }
+     setResult(checkAvailability(rawCandidate, selectedRoom, bookings, currentTimeMinutes));
++    setDecision(classify(rawCandidate, selectedRoom, bookings, currentTimeMinutes));
+   };
+ 
+   const handleReset = () => {
+     setResult(null);
++    setDecision(null);
+     setValidated(false);
+     setStartTime('');
+     setEndTime('');
+@@ -73,6 +85,7 @@
+   // Only the previous verdict is cleared here; the user's input stays.
+   const clearResult = () => {
+     setResult(null);
++    setDecision(null);
+     setValidated(false);
+   };
+ 
+@@ -220,7 +233,15 @@
+                   >
+                     {result.available ? 'Available' : 'Unavailable'}
+                   </span>
++                  {decision && (
++                    <span className="ml-2 text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-600">
++                      {decision.code}
++                    </span>
++                  )}
+                 </div>
++                {decision && decision.code !== 'OK' && (
++                  <p className="mt-2 text-sm text-slate-700">{decision.message}</p>
++                )}
+                 {result.reasons.length > 0 && (
+                   <ul className="mt-2 text-sm text-slate-600 list-disc list-inside space-y-1">
+                     {result.reasons.map((r, i) => (
+diff -ru baseline_code/src/lib/availability.ts code_based/src/lib/availability.ts
+--- baseline_code/src/lib/availability.ts	2026-11-25 14:29:28.838435200 +0500
++++ code_based/src/lib/availability.ts	2026-11-25 14:25:43.661932100 +0500
+@@ -1,7 +1,13 @@
+ import type { Room, Booking, Interval, CheckResult } from './types';
+ import { MINUTES_PER_DAY, MAX_BOOKING_MINUTES } from './types';
+ 
+-// AC4: overlap test — touching endpoints allowed (so [a,b) and [b,c) don't overlap)
++// AC numbering, Lesson #12: AC3 is the overlap rule and AC4 is the blocked-room rule, as printed on the
++// practice slide and written into docs/01_contract.md. Practices #09 and #10 labelled them the other way
++// round, so the inherited test names in booking.test.ts and regression.test.ts still read AC3 for blocked
++// and AC4 for overlap. Only the number written next to a rule moved; no rule text, message or assertion
++// changed. Defect D1 in docs/03_code_changes.md.
++
++// AC3: overlap test — touching endpoints allowed (so [a,b) and [b,c) don't overlap)
+ export function intervalsOverlap(a: Interval, b: Interval): boolean {
+   return a.start < b.end && b.start < a.end;
+ }
+@@ -48,12 +54,12 @@
+     reasons.push('Booking cannot be longer than 120 minutes.');
+   }
+ 
+-  // AC3: room blocked
++  // AC4: room blocked
+   if (room && room.blocked) {
+     reasons.push('This room is currently blocked and cannot be booked.');
+   }
+ 
+-  // AC4: overlap with existing bookings for this room
++  // AC3: overlap with existing bookings for this room
+   if (room) {
+     const roomBookings = bookings.filter((b) => b.roomId === room.id);
+     for (const b of roomBookings) {
+diff -ru baseline_code/src/lib/booking.test.ts code_based/src/lib/booking.test.ts
+--- baseline_code/src/lib/booking.test.ts	2026-11-25 14:29:28.839435200 +0500
++++ code_based/src/lib/booking.test.ts	2026-11-25 14:25:49.125542400 +0500
+@@ -3,6 +3,9 @@
+ import { rooms, sampleBookings } from '@/lib/data';
+ 
+ const now = 540; // 09:00 fixed time for deterministic tests
++// The AC3 / AC4 labels in the describe() names below are the Practice #09 numbering (AC3 blocked,
++// AC4 overlap). Lesson #12 prints them the other way round; see docs/01_contract.md. Renaming these
++// strings changes no assertion, so they were left as the historical record of that practice.
+ 
+ // Deep snapshot taken at module load, before any test can run, so every test rebuilds the
+ // same unsorted fixture. Lesson #07 version passed the shared module-level array directly,
+Only in code_based/src/lib: practice12_matrix.test.ts
+Only in code_based/src/lib: reason_codes.ts
+Only in code_based/src/lib: validation.ts

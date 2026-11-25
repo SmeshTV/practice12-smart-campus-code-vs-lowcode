@@ -1,0 +1,29 @@
+{
+  "scenario": "T2",
+  "steps": [
+    "override enabled",
+    "now=09:00",
+    "room selected: Room 101",
+    "start=09:30",
+    "end=10:30",
+    "checked"
+  ],
+  "clock": "09:00",
+  "verdict": "Unavailable",
+  "reasons": [
+    "Overlaps existing booking \"Calculus Lecture\" (09:00–10:00)."
+  ],
+  "bookings_before": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "bookings_after": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "layout": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false
+  }
+}

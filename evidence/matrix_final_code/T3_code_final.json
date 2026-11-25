@@ -1,0 +1,25 @@
+{
+  "scenario": "T3",
+  "steps": [
+    "override enabled",
+    "now=09:00",
+    "room selected: Room 102",
+    "start=10:00",
+    "end=11:00",
+    "checked"
+  ],
+  "clock": "09:00",
+  "verdict": "Unavailable",
+  "code": "E_BLOCKED",
+  "message": "This room is currently blocked and cannot be booked.",
+  "reasons": [
+    "This room is currently blocked and cannot be booked."
+  ],
+  "bookings_before": [],
+  "bookings_after": [],
+  "layout": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false
+  }
+}

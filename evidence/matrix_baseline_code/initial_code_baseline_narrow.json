@@ -1,0 +1,20 @@
+{
+  "scenario": "initial",
+  "steps": [],
+  "clock": "14:20",
+  "verdict": null,
+  "reasons": [],
+  "bookings_before": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "bookings_after": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "layout": {
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false
+  }
+}

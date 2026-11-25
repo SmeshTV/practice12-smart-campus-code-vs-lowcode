@@ -1,0 +1,53 @@
+# Task #03 prove-by-breaking, 25 Nov 2026
+
+## Mutation 1: src/lib/validation.ts, the AC2 upper bound loosened by one minute
+    if (duration > MAX_BOOKING_MINUTES)      ->   if (duration > MAX_BOOKING_MINUTES + 1)
+
+### npm test with mutation 1
+ ✓ src/lib/regression.test.ts (11 tests) 4ms
+ ✓ src/lib/booking.test.ts (23 tests) 5ms
+ ❯ src/lib/practice12_matrix.test.ts (10 tests | 1 failed) 7ms
+   × practice12 shared rows T1-T7 > T5: r1 840-961 -> Unavailable E_DURATION_TOO_LONG 4ms
+     → expected true to be false // Object.is equality
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+ FAIL  src/lib/practice12_matrix.test.ts > practice12 shared rows T1-T7 > T5: r1 840-961 -> Unavailable E_DURATION_TOO_LONG
+AssertionError: expected true to be false // Object.is equality
+ ❯ src/lib/practice12_matrix.test.ts:34:33
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 43 passed (44)
+exit: 1
+
+## Mutation 2: src/lib/availability.ts, the AC3 overlap test made endpoint-inclusive
+    a.start < b.end && b.start < a.end   ->   a.start <= b.end && b.start <= a.end
+
+### npm test with mutation 2
+   × regression after extracting isValidInterval > R3 AC2: a 121 minute duration is rejected but exactly 120 is accepted 5ms
+   × regression after extracting isValidInterval > R6 AC4: a request touching an existing booking only at an endpoint is accepted 0ms
+   × regression after the Practice #10 mitigations > R9 AC3/AC4: an unresolved room is refused instead of answered Available 0ms
+   × intervalsOverlap (AC4 — touching endpoints allowed) > returns false for touching endpoints (no overlap) 5ms
+   × checkAvailability — AC1 (reject start >= end and past) > accepts start after current time 0ms
+   × checkAvailability — AC2 (max 120 minutes) > accepts booking exactly 120 minutes 0ms
+   × checkAvailability — AC2 (max 120 minutes) > accepts booking shorter than 120 minutes 0ms
+   × checkAvailability — AC3 (reject blocked room) > accepts booking in unblocked room 0ms
+   × checkAvailability — AC4 (reject overlaps, allow touching endpoints) > allows booking touching at endpoint (start = existing end) 0ms
+   × checkAvailability — AC4 (reject overlaps, allow touching endpoints) > allows booking touching at endpoint (end = existing start) 0ms
+   × practice12 shared rows T1-T7 > T1: r1 780-840 -> Available OK 5ms
+   × practice12 shared rows T1-T7 > T7: r1 600-660 -> Available OK 0ms
+⎯⎯⎯⎯⎯⎯ Failed Tests 12 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: expected true to be false // Object.is equality
+AssertionError: expected false to be true // Object.is equality
+AssertionError: expected false to be true // Object.is equality
+AssertionError: expected false to be true // Object.is equality
+AssertionError: expected false to be true // Object.is equality
+AssertionError: expected false to be true // Object.is equality
+AssertionError: expected false to be true // Object.is equality
+exit: 1
+
+## Both mutations reverted, restored hashes match the final gate
+    validation.ts  991112b21b49bb92b3946424bc46ceba15bb6fed25a51c053d995a7f4b7d2577
+    availability.ts fae3d91630ec61a699c7647365a63c5a7ba001d42fc2f58d69c6ca853b6df6c5
+
+### npm test after restore
+ Test Files  3 passed (3)
+      Tests  44 passed (44)
+exit: 0

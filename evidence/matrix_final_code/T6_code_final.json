@@ -1,0 +1,31 @@
+{
+  "scenario": "T6",
+  "steps": [
+    "override enabled",
+    "now=09:00",
+    "room selected: Room 101",
+    "start=08:00",
+    "end=09:00",
+    "checked"
+  ],
+  "clock": "09:00",
+  "verdict": "Unavailable",
+  "code": "E_START_NOT_FUTURE",
+  "message": "Start time must be after the current time.",
+  "reasons": [
+    "Start time must be after the current time."
+  ],
+  "bookings_before": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "bookings_after": [
+    "Calculus Lecture (09:00–10:00)",
+    "Physics Lab (12:00–13:00)"
+  ],
+  "layout": {
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false
+  }
+}
