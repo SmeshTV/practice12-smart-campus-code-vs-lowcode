@@ -23,7 +23,8 @@ payment, no production database, and no booking is ever confirmed.
 | Security review with safe manual runtime checks | `docs/05_security.md`, `evidence/security_probes/`, `evidence/security_probes_lowcode/` |
 | Comparison matrix and a brief recommendation | `docs/07_comparison_matrix.md` |
 | Requirements the platform could not implement | `docs/04_lowcode_notes.md`, part 2, `evidence/09_trial_terms_and_limits.txt`, `evidence/10_export_attempt.md` |
-| AI-use record: prompts, outputs, decisions, verification | `docs/08_ai_reflection.md`, `prompts/`, `ai_outputs/` |
+| Security checklist and short AI-use reflection | `docs/09_security_checklist.md` and `docs/08_ai_reflection.md`, with the review behind them in `docs/05_security.md` |
+| AI evidence appendix: tool and date, prompts, outputs used, decisions, human verification | `prompts/`, `ai_outputs/`, `evidence/REDACTIONS.json` |
 | Screenshots of both implementations | `screenshots/` |
 | Export of the low-code project | not obtainable, `evidence/10_export_attempt.md` explains the four routes tried; `lowcode/export_from_site/` holds what a visitor can actually take away |
 
@@ -50,7 +51,8 @@ that track.
 `docs/01_contract.md`, which both implementations had to satisfy and which was written before either was touched.
 Then `docs/02_test_table.md` for the results, `docs/03_code_changes.md` for how the code track got there,
 `docs/04_lowcode_notes.md` for how the low-code track got where it is, `docs/05_security.md`, `docs/06_effort.md`,
-`docs/07_comparison_matrix.md` for the answer, and `docs/08_ai_reflection.md` for who did what.
+`docs/07_comparison_matrix.md` for the answer, `docs/09_security_checklist.md` for the ticked list and
+`docs/08_ai_reflection.md` for who did what.
 
 ## Reproducing the checks
 
