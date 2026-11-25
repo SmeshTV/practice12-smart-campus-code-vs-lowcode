@@ -1,0 +1,14 @@
+{
+  "row": "T4",
+  "steps": [
+    "room=Room 101 (Seminar Wing)",
+    "start=2026-11-26T14:00",
+    "duration=0",
+    "clicked BUTTON \"check-availability-button\""
+  ],
+  "verdict": "Unavailable",
+  "code": "E_START_NOT_FUTURE",
+  "status": "Verified Status | RULE: INTERVAL_SAFE | Unavailable | Start time must be after the current time. | Reason Code | E_START_NOT_FUTURE | Next Recommended Step | Proceed directly to room or secure session via campus desk. | Schedule Constraint | 1 - 120 min duration valid | Campus Room Master Timetable | Reference records used for instant collision evaluation. | Room 101 | Open | 09:00 - 10:00 | Calculus Lecture | 12:00 - 13:00 | Physics Lab | Room 102",
+  "buttons_on_page": 2,
+  "page_text_changed": true
+}

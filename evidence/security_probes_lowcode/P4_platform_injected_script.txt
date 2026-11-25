@@ -1,0 +1,51 @@
+# inline script the platform ships inside the published student page, verbatim, 2287 chars
+# extracted from GET / with the wall cookie, 25 November 2026
+
+/* tq-booking-key-keeper */
+/* tq-reset-token-keeper */
+(function () {
+  try {
+    var here = window.location;
+    var query = new URLSearchParams(here.search || "");
+    var fragment = new URLSearchParams(String(here.hash || "").slice(1));
+    var taken = [];
+    var key = String(query.get("key") || fragment.get("key") || "").trim().toLowerCase();
+    if (key) {
+      var pattern = new RegExp("^BK-[A-Za-z0-9]{6,}$");
+      var reference = String(query.get("ref") || "").trim();
+      if (!reference) {
+        var segments = String(here.pathname || "").split("/").filter(function (s) { return s.length > 0; });
+        var last = segments.length > 0 ? segments[segments.length - 1] : "";
+        try { last = decodeURIComponent(last); } catch (e) { /* as is */ }
+        reference = last;
+      }
+      reference = reference.toUpperCase();
+      if (pattern.test(reference)) {
+        window.sessionStorage.setItem("tq-booking-key:" + reference, key);
+        taken.push("key");
+      }
+    }
+    var resetPages = ["/reset-password"];
+    var path = String(here.pathname || "");
+    if (path.length > 1) { path = path.replace(new RegExp("/+$"), ""); }
+    var onResetPage = resetPages.some(function (page) {
+      if (path === page) { return true; }
+      if (page === "/" || path.length <= page.length) { return false; }
+      var prefix = path.slice(0, path.length - page.length);
+      return path.slice(path.length - page.length) === page && prefix.split("/").length === 2;
+    });
+    var token = String(fragment.get("token") || query.get("token") || "").trim();
+    if (onResetPage && token) {
+      window.sessionStorage.setItem("tq-reset-token", token);
+      taken.push("token");
+    }
+    if (taken.length === 0) { return; }
+    var inFragment = taken.some(function (name) { return fragment.has(name); });
+    taken.forEach(function (name) { query.delete(name); fragment.delete(name); });
+    var rest = query.toString();
+    var restFragment = inFragment ? fragment.toString() : String(here.hash || "").slice(1);
+    window.history.replaceState(window.history.state, "", here.pathname + (rest ? "?" + rest : "") + (restFragment ? "#" + restFragment : ""));
+  } catch (e) {
+    /* storage or history refused: the address keeps the key, the page reads it there */
+  }
+})();

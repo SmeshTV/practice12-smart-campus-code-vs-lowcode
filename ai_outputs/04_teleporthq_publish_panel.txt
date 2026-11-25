@@ -1,0 +1,71 @@
+Output 04 - what the platform's own publish panel says about the delivered app
+
+Captured 25 November 2026 at 15:38 +0500 from the editor's publish drawer
+(`evidence/11_lowcode_editor_snapshot.txt`, elements `uid=1_216` to `uid=1_272`). Text is the platform's, in the
+order the panel renders it. This file exists because the brief asks what the platform cannot implement, and the
+platform states several of those limits about itself.
+
+    Publish | Deployments
+    Production (selected) | Staging
+
+    https://blaring-defensive-otter-8iwe1a.teleporthq.site
+    Published
+
+    Admin panel is included
+    Manage your content from the generated dashboard on this deployment.
+    https://blaring-defensive-otter-8iwe1a.teleporthq.app/admin/dashboard
+    Only a user whose role is "admin" can sign in to it. Create one if you have not already.
+    [Create admin user]
+
+    Custom domain
+    TRIAL
+    0 of 1 slots used
+    Publish your live site on a domain you own.
+    [Configure]
+
+    Password Protection On
+    Visitors must enter a password to see your site, at every address it is published on.
+    Password: OAKKTV
+    [Remove]  (disabled)  PRO
+
+    Logo on the password page
+    Visitors see TeleportHQ's logo on the page that asks for the password. A paid plan lets you show your own.
+    No file selected
+    [Browse files]  (disabled)
+
+    Installable app  TRIAL  Off
+
+    After publishing: 1 thing to check
+    What visitors of your live site would run into. Each button takes you to where it is fixed; your fixes go
+    live the next time you publish.
+
+    Some features are not set up yet
+    These parts of your site do not work for visitors until they are set up.
+    1 services need credentials configured: Resend
+    [Open the missing setup]
+
+    Page loading speed
+    How much code each page downloads on a first visit, read from your last publish. Pages over 170 kB open
+    noticeably slower on phones.
+    [Check page loading speed]
+
+    [Unpublish site]   [Publish to Production]
+
+Read against the requirement sheet, these lines decide four things:
+
+1. The submission asks for a live demo link. The link exists, and the same panel says every visitor must also be
+   given a six-character password that cannot be removed on this plan. The demo is therefore only as available as
+   the mail that carries the password.
+2. The generator created an admin panel and an authentication page that the contract never asked for, and the
+   publish drawer offers to create the first admin user on the live deployment. Nothing was created, so the
+   address is published with no owner and no key. It answers 401 behind the same wall, which is why this is a
+   customization finding rather than an incident, and it is exactly the kind of surface a visual builder hands
+   you without being asked.
+3. "1 services need credentials configured: Resend" is the platform telling the student to paste an email
+   provider API key into the project. No key was added, and the contract has no email step, so the app was left
+   in the state the panel calls not set up. For the security checklist this is the connector question, and the
+   answer is: the platform wants a credential, the student refused to add one, and the demo still satisfies the
+   requirement sheet without it.
+4. The panel measures page weight itself and warns above 170 kB on phones. The code track's shipped bundle for
+   the same feature is 158.95 kB (`index-Bp9-gzrV.js`), which sits just under the platform's own threshold and
+   was written by hand rather than generated.

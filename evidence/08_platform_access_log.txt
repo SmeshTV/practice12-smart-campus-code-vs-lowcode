@@ -1,0 +1,117 @@
+# Platform access log, raw captures
+
+The first four blocks were produced on 25 November 2026 between 14:39 and 15:00 +0500, in the sessions described
+in `docs/04_lowcode_notes.md`; section 5 was re-run at 15:58 to capture the message in the language the machine
+answers in. They are pasted as the tools printed them, with nothing added. Screenshots of the
+Appsmith and Budibase screens could not be taken, because those sessions live in the Qoder in-app browser and
+its surface was hidden while the captures were attempted; the structural snapshots below are the evidence of
+record for those two, and `screenshots/platform_access/` holds the frames that could be taken.
+
+One change from the raw capture: the signed-in account address appears twice below, in the Appsmith banner and
+nowhere else, and it is replaced by REDACTED-PERSONAL-EMAIL. Original 5484 bytes, sha256
+96c4f33b8163e31081d1e8011bfe729d891763388c4a7495c9212a416dbaffbc, recorded in `evidence/REDACTIONS.json`.
+Everything else is exactly what the tool printed.
+
+## 1. Appsmith, every route lands on the license page
+
+Structural snapshot of `https://apps.appsmith.com/license`, after signing in as `REDACTED-PERSONAL-EMAIL`:
+
+```
+RootWebArea "Appsmith" url="https://apps.appsmith.com/license"
+  banner
+    StaticText "TB" / StaticText "The Beasts" / StaticText "REDACTED-PERSONAL-EMAIL"
+    StaticText "Account" / StaticText "Sign Out"
+    StaticText "Appsmith v2.7.3-SNAPSHOT" / StaticText "Released" / StaticText "2 hrs" / StaticText "ago"
+  image "No active subscription" url="https://assets.appsmith.com/license-expired-non-admin.svg"
+  StaticText "Your instance is currently inactive. Please contact your instance administrator to reactivate the instance."
+```
+
+Routes tried, all of them returning to `/license`: `/applications`, `/instance`, and the editor URL handed out
+by onboarding `/applications/6b06ad2d3b65d56fe9785fa5/pages/6b06ad2d3b65d56fe9785fa8/edit`.
+
+## 2. GlideOS, from the vendor's own pricing page
+
+```
+| Plan       | Price      | Published Apps | Public apps            |
+| Free       | $0 / mo    | 0              | no                     |
+| Basic      | $25 / mo   | 2              | no                     |
+| Plus       | $50 / mo   | 5              | yes ("Unlock with Plus") |
+```
+
+Source: `https://www.glideapps.com/pricing`, read 25 November 2026 14:44, compare-table section "Unlock with
+Plus - Publish public apps".
+
+## 3. Budibase, tenant creation over the platform's own API
+
+The wizard's Continue button kept `class="... spectrum-Button--cta new-styles is-disabled"` after the field was
+filled, so the request the wizard's own bundle builds was sent by hand. The bundle shows the shape:
+
+```
+const Il={name:Oa.id,hosting:El}; El===HostingTypes.Cloud && (Il.id=Oa.id);
+const cl=await tenant.createTenant(Il)
+```
+
+Request and answer, in order:
+
+```
+POST /api/v2/tenant {"url":"kbtu-practice12"}
+  400 {"issues":[{"code":"invalid_type","path":["name"],"message":"Required"},
+                  {"expected":"'self' | 'cloud'","code":"invalid_type","path":["hosting"],"message":"Required"}]}
+
+POST /api/v2/tenant {"name":"kbtu-practice12","url":"kbtu-practice12"}
+  400 {"issues":[{"expected":"'self' | 'cloud'","code":"invalid_type","path":["hosting"],"message":"Required"}]}
+
+POST /api/v2/tenant {"name":"kbtu-practice12","id":"kbtu-practice12","hosting":"cloud"}
+  400 {"issues":[{"code":"custom","path":["tenant"],
+        "message":"Minimum 3 characters, no uppercase or special characters. Must not start with a number"}]}
+
+POST /api/v2/tenant {"name":"kbtupractice12","id":"kbtupractice12","hosting":"cloud"}
+  202 {"id":"kbtupractice12","status":"payment-pending",
+       "sessionId":"b794cebf-c2ba-41ec-aaf4-aeb1d8142e6e","processInstanceId":"4503600559653655"}
+
+GET  /api/v2/tenant            -> 202 later still returns []
+GET  /api/v2/tenant/kbtupractice12 -> 404 {"message":"Not found","status":404}
+```
+
+## 4. Glide Classic, the signup error
+
+Printed on `https://go.glideapps.com/` after the Google button, captured from the live page:
+
+```
+Create your Classic account
+Already have a Glide Classic account? Sign in
+Sign up with Google
+OR
+By signing up, you agree to our Terms & Privacy Policy.
+Over 100k companies have built with Glide.
+There's a problem
+Firebase: This operation is restricted to administrators only. (auth/admin-restricted-operation).
+OK
+```
+
+The same text appeared after the email path. Frame: `screenshots/platform_access/glide_classic.png`.
+
+## 5. Docker and WSL, the self-hosting route
+
+```
+$ docker version
+/usr/bin/bash: line 1: docker: command not found
+
+$ wsl -d Ubuntu -u root -- bash -lc "which docker && docker version"
+WSL2 не поддерживается текущей конфигурацией компьютера.
+Включите дополнительный компонент "Платформа виртуальной машины" и включите виртуализацию в BIOS.
+Чтобы включить компонент "Платформа виртуальной машины", выполните команду wsl.exe --install --no-distribution
+Дополнительные сведения см. на странице https://aka.ms/enablevirtualization
+Код ошибки: Wsl/Service/CreateInstance/CreateVm/HCS/HCS_E_HYPERV_NOT_INSTALLED
+(exit code 127)
+
+$ wsl -l -v
+    NAME      STATE           VERSION
+*   Ubuntu    Stopped         2
+```
+
+Re-run 25 November 2026 from this session. The block is quoted in the language the machine answers in. In English it
+says WSL2 is not supported by the current configuration of the computer, that the "Virtual Machine Platform"
+optional component must be enabled and virtualisation turned on in the BIOS, and ends with the code
+`HCS_E_HYPERV_NOT_INSTALLED`. The distro is registered as version 2 but cannot boot, so no container starts on
+this laptop and a self-hosted Appsmith or Budibase is not available to this student either.

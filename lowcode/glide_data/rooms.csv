@@ -1,0 +1,6 @@
+room_id,name,building,capacity,blocked
+r1,Room 101,Engineering Block,30,FALSE
+r2,Room 102,Engineering Block,24,TRUE
+r3,Room 201,Science Wing,40,FALSE
+r4,Room 202,Science Wing,18,FALSE
+r5,Auditorium A,Main Hall,120,FALSE

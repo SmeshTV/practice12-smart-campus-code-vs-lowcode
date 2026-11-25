@@ -1,0 +1,26 @@
+[
+  {
+    "file": "evidence/08_platform_access_log.txt",
+    "bytes_original": 5484,
+    "sha256_original": "96c4f33b8163e31081d1e8011bfe729d891763388c4a7495c9212a416dbaffbc",
+    "email_replacements": 2,
+    "avatar_replacements": 0,
+    "sha256_redacted": "9993ebe44d27ef0547f7f9601d541a24f507fc960d06f54945f98e318f610ec3"
+  },
+  {
+    "file": "evidence/11_lowcode_editor_snapshot.txt",
+    "bytes_original": 19648,
+    "sha256_original": "3b14f02363fdb22837fa76ea7da1490d40e1c087ad8e02f1a99318abfcfd9e9d",
+    "email_replacements": 0,
+    "avatar_replacements": 3,
+    "sha256_redacted": "5eef6b267d8623fc59fde5ebcd42aea68ca95d794a782d38a68f9dd0aff8f2e5"
+  },
+  {
+    "file": "lowcode/export_from_site/published_index.html",
+    "bytes_original": 233992,
+    "sha256_original": "cec21fb82945826e926bdab6c60b4d4750cafa8875dd2c5ddb3d44ceeaaa6982",
+    "email_replacements": 1,
+    "avatar_replacements": 0,
+    "sha256_redacted": "09aba76697ba825313c0d9c71eb4ec6f951a48ae3a141fa4ab4021248b715411"
+  }
+]

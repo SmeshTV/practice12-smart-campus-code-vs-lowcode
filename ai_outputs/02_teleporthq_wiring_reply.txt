@@ -1,0 +1,31 @@
+Output 02 - TeleportHQ assistant, reply to prompts/04_lowcode_workflow.md
+
+Received in the editor chat at 15:29 +0500, 25 November 2026. Verbatim from the platform's own chat log
+(`evidence/11_lowcode_editor_snapshot.txt`, elements `uid=1_181` and `uid=1_182`). The chat thread carries the
+title "Wire the RoomCheckerSection so it actually compute..." and lists two steps the platform performed:
+
+    Prepare the availability button and result fields for live checks
+    Wire the availability check with the required validation and overlap rules
+
+and one artefact:
+
+    Compute Room Availability          [Open workflow]
+
+Message text:
+
+    Check Availability is now a real button, wired to your ordered validation rules and fictional timetable.
+    The Verified Status panel updates its verdict, reason code, and message without changing booking data.
+
+    Saved, but not yet run - test it in Preview.
+
+What the student verified afterwards, rather than accepting the claim:
+
+- the controls the message promises do exist: `select#room-select`, `input#start-datetime`,
+  `input#duration-minutes`, `button#check-availability-button`;
+- the rule set is a real Workflow object, named above, visible in the platform's Workflows panel;
+- the eight contract rows were then run against the published deployment, and 1 of 8 matched the expected
+  reason code. See `docs/02_test_table.md` and `evidence/matrix_lowcode/`.
+
+The phrase "Saved, but not yet run" is the platform's own, and it is the most useful sentence in this output:
+the platform does not execute the rule it just wrote, so the verification burden moves entirely to the student
+on this track. On the code track the same claim is checked by `npm test` before anything is published.

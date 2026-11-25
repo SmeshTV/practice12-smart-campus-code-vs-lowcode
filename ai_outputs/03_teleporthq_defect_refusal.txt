@@ -1,0 +1,45 @@
+Output 03 - TeleportHQ assistant, refusal of prompts/05_lowcode_defect.md
+
+Received in the editor chat at 15:36 +0500, 25 November 2026. Verbatim from the platform's own chat log
+(`evidence/11_lowcode_editor_snapshot.txt`, elements `uid=1_196` through `uid=1_206`). This is the platform's
+entire response to a defect report that had already been reproduced eight times against the published site.
+
+    Failed to apply changes
+
+    No fix was applied because the reported time-only comparison was not found in the current workflow.
+    Runtime behavior was not tested.
+
+    Waiting for your input below
+    NEED YOUR INPUT
+    Should I check whether the selected date reaches the availability check correctly?
+
+    The saved rule already compares the full datetime, so no fix was applied; runtime behavior remains
+    untested.
+
+    [Check the date input connection]   [I'll share a failing example]   Or type your own answer...
+
+    Send answer  (disabled)
+    Waiting for you
+    The conversation waits for your answer - no rush, it picks right back up.
+
+What happened next, recorded as it happened rather than as a decision:
+
+- The student went back to answer the prompt, with a concrete failing example written out: room Room 101,
+  start 2026-11-26T13:00, duration 60, expected `OK`, observed `E_START_NOT_FUTURE`, and the same code on all
+  eight rows.
+- The editor would not accept it. The chat control was gone from the page (`no textarea`), and the URL that had
+  been `/editor/TQ_0GJaR--dLH` had become `/preview/TQ_0GJaR--dLH` with one button on the whole document,
+  "Back to Dashboard". Reloading the editor returned the same preview shell. This is the same narrow-surface
+  limitation recorded in `evidence/10_export_attempt.md`, and it is what closed the repair attempt: the
+  conversation was not abandoned, it became unreachable.
+- LC-1 therefore stays open at submission, with the refusal quoted above as the platform's final word on it.
+
+The two sentences that matter for the comparison, side by side:
+
+    platform, about the rule:      "The saved rule already compares the full datetime"
+    published site, 8 rows later:  every row returns E_START_NOT_FUTURE
+
+A claim and a behaviour can disagree like this without any way to settle it, only when there is no source file to
+open. On the code track the same disagreement would have surfaced as a failing test in about half a second, and
+the fix would have been a three-minute edit, which is exactly what `docs/03_code_changes.md` shows.
+

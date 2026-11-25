@@ -1,0 +1,63 @@
+TeleportHQ workspace panel, verbatim innerText capture, 25 November 2026.
+Source: https://play.teleporthq.io/workspaces/my-workspace-boschv , the "Your 7 day free trial is live" panel
+with the "What happens when your trial ends" disclosure opened through the page's own control.
+Read with the in-app browser's DOM inspector; the pointer action was refused by the host, so the click was
+dispatched by script on the element the page rendered, and the text below is what the page then exposed.
+
+---
+
+Your 7 day free trial is live
+
+TRIAL ACTIVE
+
+Full access until 2 декабря 2026 г.
+
+Completely free — no credit card required.
+
+Subscribe before your trial ends
+
+Paid plans include up to 150,000 AI tokens each month. Subscribe before your trial ends and we'll add an extra
+25,000 to your first month — our thank-you for upgrading early.
+
+What's unlocked during your trial
+
+Custom domains & Vercel integration
+Higher asset storage & upload limits
+Higher form & submission limits
+CMS & webhooks
+Password-protected deployments
+
+What happens when your trial ends
+
+All deployments and custom domains will be removed
+All projects will be archived — no actions can be taken on them
+
+Subscribe any time to restore full access.
+
+---
+
+Project card from the same screen, same capture:
+
+  CampusCue
+  blaring-defensive-otter-8iwe1a.teleporthq.app
+  Bookings | Web App | Single language | Owner
+  Last opened: 25 minutes ago
+  2 assets, 1.8 MB / 1.0 GB
+
+Also printed on that screen while the in-app browser surface was 718 px wide:
+
+  Your browser window is too narrow. Building capabilities are disabled.
+  For the best experience, please use a device with a larger screen or resize your browser window to at least
+  767px wide.
+
+Consequences for this practice, written down because the brief asks what the platform cannot do:
+
+1. The published low-code demo has an expiry date the student does not control. The trial ends 2 December 2026,
+   after which the deployment is removed and the project is archived. The course brief forbids buying a
+   subscription, so the demo cannot be kept alive past that date, and the marker may receive a dead link.
+   The screenshots in `screenshots/lowcode/` and the records in `evidence/matrix_lowcode/` are therefore the
+   permanent evidence for this track, and the report states the expiry next to the link.
+2. The editor is unusable below 767 px, so the low-code track cannot be built, changed or reviewed on a phone,
+   while the built app does render at 390 px (measured in `evidence/responsive_lowcode_390.json`).
+3. Password-protected deployments are listed as a trial feature, and the removal control is greyed out; the
+   panel gives no way to rotate the generated password.

@@ -1,0 +1,67 @@
+# Low-code track, HTTP probes. Own published project only, 25 November 2026, curl.
+
+== 1. cookie-less GET / ==
+  HTTP/1.1 401 Unauthorized
+  Age: 0
+  Cache-Control: no-store
+  Content-Length: 13566
+  Content-Type: text/html; charset=utf-8
+  Date: Wed, 25 Nov 2026 10:55:01 GMT
+  Etag: "xdv3idro3vagq"
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(self)
+  Referrer-Policy: strict-origin-when-cross-origin
+  Server: Vercel
+  Strict-Transport-Security: max-age=63072000
+  X-Content-Type-Options: nosniff
+  X-Matched-Path: /api/site-password
+  X-Robots-Tag: noindex
+  X-Vercel-Cache: MISS
+  X-Vercel-Id: fra1::fra1::grrhl-1795604101674-62b8e70e57f9
+
+  body: 13566 bytes, <title>CampusCue - password required</title>
+
+== 2. POST /api/site-password with the correct value ==
+  HTTP/1.1 200 Connection Established
+  HTTP/1.1 200 OK
+  Set-Cookie: tq_wall=63b94f7bf0f647128acbbe1bbea6a68e3bb35bcfb750c9cc71626b06a9368205; Path=/; Max-Age=2592000; HttpOnly; SameSite=Lax; Secure
+  body -> {"ok":true}
+
+== 3. POST /api/site-password with a wrong value ==
+  HTTP/1.1 401 Unauthorized, body {"ok":false}, time_total 0.747870 s
+
+== 4. POST /api/site-password with an empty object ==
+  HTTP/1.1 400 Bad Request, body {"ok":false}
+
+== 5. five consecutive wrong passwords ==
+  aaa111 http=401 time=0.772064
+  bbb222 http=401 time=0.680582
+  ccc333 http=401 time=1.294564
+  ddd444 http=401 time=0.647846
+  eee555 http=401 time=0.670157
+  no 429, no Retry-After, no lockout page, and a cookie-less GET / still returned 401 afterwards, so nothing was bypassed
+
+== 6. path coverage of the wall ==
+  GET /robots.txt          401
+  GET /login               401
+  GET /admin               401
+  GET /dashboard           401
+  GET /_next/data          401
+  GET /api/site-password   405 Method Not Allowed
+
+== 7. GET / with the wall cookie ==
+  HTTP/1.1 200, 233992 bytes, a Next.js build served by Vercel
+  Cache-Control: public, max-age=0, must-revalidate
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(self)
+  Referrer-Policy: strict-origin-when-cross-origin
+  Server: Vercel
+  Strict-Transport-Security: max-age=63072000
+  X-Content-Type-Options: nosniff
+  absent: Content-Security-Policy, X-Frame-Options, Cross-Origin-Resource-Policy
+
+== 8. third-party assets the published page loads ==
+  <link rel="stylesheet" href="https://unpkg.com/animate.css@4.1.1/animate.css">
+  <link rel="stylesheet" href="https://unpkg.com/@teleporthq/teleport-custom-scripts@0.0.30/dist/style.css">
+  <script defer src="https://unpkg.com/@teleporthq/teleport-custom-scripts@0.0.30"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"> + fonts.gstatic.com
+  occurrences of integrity= in the delivered document: 0
+  hosts reachable from the rendered DOM: fonts.googleapis.com, fonts.gstatic.com, unpkg.com, play.teleporthq.io

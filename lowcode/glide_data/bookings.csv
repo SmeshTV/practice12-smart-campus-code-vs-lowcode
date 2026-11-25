@@ -1,0 +1,8 @@
+booking_id,room_id,start_min,end_min,title
+b1,r1,540,600,Calculus Lecture
+b2,r1,720,780,Physics Lab
+b3,r3,600,660,Chemistry Seminar
+b4,r3,900,960,Faculty Meeting
+b5,r4,480,540,Morning Tutorial
+b6,r5,660,720,Guest Lecture
+b7,r5,840,930,Symposium

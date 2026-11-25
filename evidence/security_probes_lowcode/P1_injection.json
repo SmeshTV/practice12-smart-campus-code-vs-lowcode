@@ -1,0 +1,53 @@
+{
+  "url": "https://blaring-defensive-otter-8iwe1a.teleporthq.app/",
+  "checks": {
+    "fields": [
+      {
+        "tag": "SELECT",
+        "type": "select-one",
+        "id": "room-select",
+        "name": "room"
+      },
+      {
+        "tag": "INPUT",
+        "type": "datetime-local",
+        "id": "start-datetime",
+        "name": "startDatetime"
+      },
+      {
+        "tag": "INPUT",
+        "type": "number",
+        "id": "duration-minutes",
+        "name": "durationMinutes"
+      }
+    ],
+    "targets": 1,
+    "accepted": [
+      {
+        "id": "duration-minutes",
+        "kept": ""
+      }
+    ],
+    "payload_in_dom": false,
+    "handler_fired": false,
+    "img_elements": 0,
+    "dom_length_before": 34474,
+    "dom_length_after": 34464,
+    "cookies": "(none readable)",
+    "localStorage": [
+      {
+        "k": "nextauth.message",
+        "v": "{\"event\":\"session\",\"data\":{\"trigger\":\"getSession\"},\"timestamp\":1795604038}"
+      }
+    ],
+    "sessionStorage": [],
+    "external_hosts": [
+      "fonts.googleapis.com",
+      "fonts.gstatic.com",
+      "unpkg.com",
+      "play.teleporthq.io"
+    ],
+    "forms": 0,
+    "links_to_auth": []
+  }
+}

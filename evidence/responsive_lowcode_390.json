@@ -1,0 +1,44 @@
+{
+  "viewport": "390x844",
+  "user_js_scroll_width": 390,
+  "horizontal_scroll": false,
+  "overflowing": [],
+  "overflowing_count": 0,
+  "controls": [
+    {
+      "label": "",
+      "x": 334,
+      "w": 44,
+      "h": 44,
+      "tap_h_under_40": false
+    },
+    {
+      "label": "room-select",
+      "x": 29,
+      "w": 333,
+      "h": 47,
+      "tap_h_under_40": false
+    },
+    {
+      "label": "start-datetime",
+      "x": 29,
+      "w": 333,
+      "h": 49,
+      "tap_h_under_40": false
+    },
+    {
+      "label": "duration-minutes",
+      "x": 29,
+      "w": 333,
+      "h": 47,
+      "tap_h_under_40": false
+    },
+    {
+      "label": "check-availability-button",
+      "x": 29,
+      "w": 333,
+      "h": 44,
+      "tap_h_under_40": false
+    }
+  ]
+}
